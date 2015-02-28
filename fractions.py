@@ -50,15 +50,21 @@ class Fraction(object):
 		if type(terme) != Fraction:
 			terme = Fraction(terme)
 		self, terme = mettreAuMemeDenominateur(self, terme)
-		self.numerateur += self.denominateur
+		self.numerateur += terme.numerateur
 		return self
+		
+	def __radd__(self, terme):
+		return self + terme
 	
 	def __sub__(self, terme): #Overload de l'opérateur -
 		if type(terme) != Fraction:
 			terme = Fraction(terme)
 		self, terme = mettreAuMemeDenominateur(self, terme)
-		self.numerateur -= self.denominateur
+		self.numerateur -= terme.numerateur
 		return self
+		
+	def __rsub__(self, terme):
+		return terme + (-self)
 	
 	def __mul__(self, facteur): #Overload de l'opérateur *
 		if type(facteur) != Fraction:
@@ -68,6 +74,9 @@ class Fraction(object):
 			self.denominateur *= facteur.denominateur
 		return self
 		
+	def __rmul__(self, terme):
+		return self*terme
+		
 	def __truediv__(self, div): #Overload de l'opérateur /
 		if type(div) != Fraction:
 			self.denominateur *= div
@@ -75,6 +84,9 @@ class Fraction(object):
 			self.numerateur *= div.denominateur
 			self.denominateur *= div.numerateur
 		return self
+		
+	def __rtruediv__(self, div):
+		return div*self.inverse()
 		
 	def __pow__(self, puissance): #Overload de l'opérateur **
 		if type(puissance) != Fraction:
@@ -90,9 +102,11 @@ class Fraction(object):
 	def valeurExacte(self): #Obtention de la valeur exacte de la fraction
 		return float(self.numerateur/self.denominateur)
 		
+	def __eq__(self, autre):
+		if type(autre) != Fraction:
+			autre = Fraction(autre)
+		return (True if self.numerateur*autre.denominateur==self.denominateur*autre.numerateur else False)
+		
 #Exemples :
 a = Fraction(1, 2)
 b = Fraction('2/1')
-print(a+b, a-b, a*b, (a/b).valeurExacte())
-print((a+1).reduire(), b+7, a*2, (b/4).valeurExacte())
-print(intToFraction(2))
